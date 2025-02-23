@@ -1,36 +1,35 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# ✨ HaruHana - 나만의 학습 설정 프로젝트 ✨
 
-## Getting Started
+## 💡 기획 의도
 
-First, run the development server:
+혹시 [매일 메일](https://www.maeil-mail.kr/) 서비스에 대해 들어보신 적 있으신가요?
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+![매일 메일 서비스](/docs/maeil-mail.png)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+[매일 메일](https://www.maeil-mail.kr/) 서비스는 매일 아침마다 기술 면접 질문을 이메일로 받아보고 답변을 확인하며 면접 준비를 할 수 있는 서비스에요.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+![매일 메일 서비스 미리보기](/docs/maeil-mail-preview1.png)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+![매일 메일 서비스 미리보기](/docs/maeil-mail-preview2.png)
 
-## Learn More
+저희는 이 서비스에서 영감을 받아, 개발자를 꿈꾸는 사람들이 매일 꾸준히 실력을 쌓을 수 있는 플랫폼을 만들고자 했어요.
 
-To learn more about Next.js, take a look at the following resources:
+## 📌 프로젝트 소개
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+HaruHana는 개발자를 위한 맞춤형 학습 플랫폼이에요.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+매일 아침, 사용자가 설정한 카테고리에 맞춰 새로운 문제가 제공되어, 다양한 개발 지식을 체계적으로 학습할 수 있도록 도와줘요.
 
-## Deploy on Vercel
+## 🎨 디자인 시스템
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 컬러 팔레트 (Core Colors)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| 색상 이름  | 라이트 모드 | 다크 모드 | 용도                 |
+| ---------- | ----------- | --------- | -------------------- |
+| Primary    | `#4B49AC`   | `#818CF8` | 주요 버튼, CTA       |
+| Secondary  | `#7978E9`   | `#A5B4FC` | 보조 버튼, 성공 상태 |
+| Accent     | `#F3797E`   | `#FDA4AF` | 강조, 오류, 경고     |
+| Background | `#F7F7FC`   | `#0F172A` | 배경                 |
+| Text       | `#2D2B55`   | `#F8FAFC` | 텍스트               |
+
+(해당 색상은 추후 변경될 수 있어요.)
