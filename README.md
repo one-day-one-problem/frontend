@@ -1,46 +1,35 @@
-# Getting Started with Create React App
+# ✨ HaruHana - 나만의 학습 설정 프로젝트 ✨
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 💡 기획 의도
 
-## Available Scripts
+혹시 [매일 메일](https://www.maeil-mail.kr/) 서비스에 대해 들어보신 적 있으신가요?
 
-In the project directory, you can run:
+![매일 메일 서비스](./docs/maeil-mail.png)
 
-### `npm start`
+[매일 메일](https://www.maeil-mail.kr/) 서비스는 매일 아침마다 기술 면접 질문을 이메일로 받아보고 답변을 확인하며 면접 준비를 할 수 있는 서비스에요.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+![매일 메일 서비스 미리보기](./docs/maeil-mail-preview1.png)
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+![매일 메일 서비스 미리보기](./docs/maeil-mail-preview2.png)
 
-### `npm test`
+저희는 이 서비스에서 영감을 받아, 개발자를 꿈꾸는 사람들이 매일 꾸준히 실력을 쌓을 수 있는 플랫폼을 만들고자 했어요.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 📌 프로젝트 소개
 
-### `npm run build`
+HaruHana는 개발자를 위한 맞춤형 학습 플랫폼이에요.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+매일 아침, 사용자가 설정한 카테고리에 맞춰 새로운 문제가 제공되어, 다양한 개발 지식을 체계적으로 학습할 수 있도록 도와줘요.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## 🎨 디자인 시스템
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### 컬러 팔레트 (Core Colors)
 
-### `npm run eject`
+| 색상 이름  | 라이트 모드 | 다크 모드 | 용도                 |
+| ---------- | ----------- | --------- | -------------------- |
+| Primary    | `#4B49AC`   | `#818CF8` | 주요 버튼, CTA       |
+| Secondary  | `#7978E9`   | `#A5B4FC` | 보조 버튼, 성공 상태 |
+| Accent     | `#F3797E`   | `#FDA4AF` | 강조, 오류, 경고     |
+| Background | `#F7F7FC`   | `#0F172A` | 배경                 |
+| Text       | `#2D2B55`   | `#F8FAFC` | 텍스트               |
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+(해당 색상은 추후 변경될 수 있어요.)
