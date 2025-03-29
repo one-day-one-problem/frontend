@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import Navigation from "../components/Navigation";
 import "../styles/global.css";
 
-const LandingPage: React.FC = () => {
+function LandingPage() {
   return (
     <>
       {/* 상단 네비게이션 바 */}
@@ -181,6 +181,6 @@ const LandingPage: React.FC = () => {
       </div>
     </>
   );
-};
+}
 
 export default LandingPage;
