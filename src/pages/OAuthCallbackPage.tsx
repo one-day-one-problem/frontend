@@ -9,7 +9,7 @@ function OAuthCallbackPage() {
   const { saveTokens } = useAuth();
 
   useEffect(() => {
-    const handleOAuthCallback = async () => {
+    const handleOAuthCallback = () => {
       try {
         // URL에서 토큰 파라미터 추출
         const params = new URLSearchParams(location.search);
