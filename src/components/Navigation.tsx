@@ -2,7 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 
-const Navigation: React.FC = () => {
+function Navigation() {
   return (
     <motion.nav
       initial={{ y: -100 }}
@@ -24,6 +24,6 @@ const Navigation: React.FC = () => {
       </div>
     </motion.nav>
   );
-};
+}
 
 export default Navigation;
