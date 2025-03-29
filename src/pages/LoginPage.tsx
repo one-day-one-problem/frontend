@@ -41,7 +41,7 @@ const socialLogins: SocialLoginProvider[] = [
   },
 ];
 
-const LoginPage: React.FC = () => {
+function LoginPage() {
   const handleSocialLogin = (path: string) => {
     const baseUrl = process.env.REACT_APP_API_URL || "";
     window.location.href = `${baseUrl}${path}`;
@@ -106,6 +106,6 @@ const LoginPage: React.FC = () => {
       </motion.div>
     </div>
   );
-};
+}
 
 export default LoginPage;
