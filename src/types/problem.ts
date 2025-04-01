@@ -319,3 +319,50 @@ export interface ProblemPage extends PageInfo {
  * 문제 목록 API (GET /api/problems) 응답 데이터 타입
  */
 export type ProblemListResponse = ApiResponse<ProblemPage>;
+
+////////////////////////////////////////
+
+/**
+ * 문제 옵션 데이터 타입
+ *
+ * 객관식 문제의 선택지를 나타낸다.
+ *
+ * @property id - 선택지 고유 식별자
+ * @property content - 선택지 내용
+ */
+export interface ProblemOption {
+  id: number;
+  content: string;
+}
+
+/**
+ * 문제 상세 정보
+ *
+ * 문제의 상세 정보를 나타낸다.
+ *
+ * @property id - 문제 고유 식별자
+ * @property title - 문제 제목
+ * @property question - 문제 내용
+ * @property category - 문제 카테고리
+ * @property difficulty - 문제 난이도
+ * @property type - 문제 유형(주관식, 객관식)
+ * @property solvedCount - 문제를 해결한 사용자 수
+ * @property isSolved - 현재 로그인한 사용자의 해결 여부(인증된 사용자만 해당)
+ * @property options - 객관식 문제의 선택지 목록
+ */
+export interface Problem {
+  id: number;
+  title: string;
+  question: string;
+  category: ProblemCategory;
+  difficulty: ProblemDifficulty;
+  type: ProblemType;
+  solvedCount: number;
+  isSolved?: boolean;
+  options?: ProblemOption[];
+}
+
+/**
+ * 문제 상세 API (GET /api/problems/{id}) 응답 데이터 타입
+ */
+export interface ProblemResponse extends ApiResponse<Problem> {}
