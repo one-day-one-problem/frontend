@@ -3,6 +3,7 @@ import {
   ProblemCategory,
   ProblemDifficulty,
   ProblemListResponse,
+  ProblemResponse,
   ProblemSortType,
   ProblemType,
 } from "../types/problem";
@@ -73,6 +74,26 @@ const problemApi = {
       return response.data;
     } catch (error) {
       console.error("문제 목록 조회 중 오류 발생:", error);
+      throw error;
+    }
+  },
+
+  /**
+   * 특정 문제를 조회하는 API
+   *
+   * @param problemId - 조회할 문제 ID
+   * @returns 문제 상세 정보
+   */
+  getProblem: async (problemId: string | number): Promise<ProblemResponse> => {
+    try {
+      // API 호출
+      const response = await axiosInstance.get<ProblemResponse>(
+        `/api/problems/${problemId}`
+      );
+
+      return response.data;
+    } catch (error) {
+      console.error(`문제 ID ${problemId} 조회 중 오류 발생:`, error);
       throw error;
     }
   },
