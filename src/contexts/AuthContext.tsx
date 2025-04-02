@@ -16,12 +16,14 @@ import { AuthTokens } from "../types/auth";
  * @property saveTokens - 인증 토큰을 저장하는 함수
  * @property logout - 로그아웃 처리 함수
  * @property getAuthHeaders - API 요청에 사용할 인증 헤더를 반환하는 함수
+ * @property refreshTokens - 토큰 갱신 함수
  */
 interface AuthContextType {
   isAuthenticated: boolean;
   saveTokens: (tokens: AuthTokens) => void;
   logout: () => void;
   getAuthHeaders: () => Record<string, string>;
+  refreshTokens: () => Promise<AuthTokens>;
 }
 
 /**
@@ -102,6 +104,22 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
      * @returns 인증 헤더 객체
      */
     getAuthHeaders: authService.getAuthHeaders,
+
+    /**
+     * 토큰을 갱신하는 함수
+     *
+     * @returns 새로운 토큰 정보
+     */
+    refreshTokens: async () => {
+      try {
+        const newTokens = await authService.refreshTokens();
+        setIsAuthenticated(true);
+        return newTokens;
+      } catch (error) {
+        setIsAuthenticated(false);
+        throw error;
+      }
+    },
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
