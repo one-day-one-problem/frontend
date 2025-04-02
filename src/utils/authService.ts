@@ -1,60 +1,55 @@
 import { AuthTokens } from "../types/auth";
 
-const AUTH_TOKEN_KEY = "haruhana_auth_tokens";
+const ACCESS_TOKEN_KEY = "accessToken";
+const REFRESH_TOKEN_KEY = "refreshToken";
 
 /**
  * 인증 관련 유틸리티 서비스
  */
 const authService = {
   /**
-   * 로컬 스토리지에 인증 토큰을 저장하는 함수
+   * 로컬 스토리지에 토큰을 저장하는 함수
    */
-  saveTokensToStorage(tokens: AuthTokens): void {
-    localStorage.setItem(AUTH_TOKEN_KEY, JSON.stringify(tokens));
+  saveTokensToStorage: (tokens: AuthTokens): void => {
+    localStorage.setItem(ACCESS_TOKEN_KEY, tokens.accessToken);
+    localStorage.setItem(REFRESH_TOKEN_KEY, tokens.refreshToken);
   },
 
   /**
-   * 로컬 스토리지에서 인증 토큰을 가져오는 함수
+   * 로컬 스토리지에서 토큰을 제거하는 함수
    */
-  getTokensFromStorage(): AuthTokens | null {
-    const tokensStr = localStorage.getItem(AUTH_TOKEN_KEY);
-    if (!tokensStr) return null;
-
-    try {
-      return JSON.parse(tokensStr) as AuthTokens;
-    } catch (error) {
-      console.error("토큰 파싱 오류:", error);
-      return null;
-    }
+  removeTokensFromStorage: (): void => {
+    localStorage.removeItem(ACCESS_TOKEN_KEY);
+    localStorage.removeItem(REFRESH_TOKEN_KEY);
   },
 
   /**
-   * 액세스 토큰만 가져오는 함수
+   * 액세스 토큰을 가져오는 함수
    */
-  getAccessToken(): string | null {
-    return this.getTokensFromStorage()?.accessToken || null;
+  getAccessToken: (): string | null => {
+    return localStorage.getItem(ACCESS_TOKEN_KEY);
   },
 
   /**
-   * 로컬 스토리지에서 인증 토큰을 삭제하는 함수
+   * 리프레시 토큰을 가져오는 함수
    */
-  removeTokensFromStorage(): void {
-    localStorage.removeItem(AUTH_TOKEN_KEY);
+  getRefreshToken: (): string | null => {
+    return localStorage.getItem(REFRESH_TOKEN_KEY);
   },
 
   /**
-   * 사용자가 로그인되어 있는지 확인하는 함수
+   * 인증 여부를 확인하는 함수
    */
-  isAuthenticated(): boolean {
-    return this.getAccessToken() !== null;
+  isAuthenticated: (): boolean => {
+    return !!localStorage.getItem(ACCESS_TOKEN_KEY);
   },
 
   /**
-   * API 요청에 사용할 인증 헤더를 생성하는 함수
+   * API 요청용 인증 헤더를 생성하는 함수
    */
-  getAuthHeaders(): Record<string, string> {
-    const accessToken = this.getAccessToken();
-    return accessToken ? { Authorization: `Bearer ${accessToken}` } : {};
+  getAuthHeaders: (): Record<string, string> => {
+    const token = localStorage.getItem(ACCESS_TOKEN_KEY);
+    return token ? { Authorization: `Bearer ${token}` } : {};
   },
 };
 
