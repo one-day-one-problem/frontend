@@ -1,7 +1,14 @@
-import { AuthTokens } from "../types/auth";
+import axios from "axios";
+import { ApiResponse } from "../types/api";
+import {
+  AuthTokens,
+  TokenRefreshRequestDto,
+  TokenRefreshResponse,
+} from "../types/auth";
 
 const ACCESS_TOKEN_KEY = "accessToken";
 const REFRESH_TOKEN_KEY = "refreshToken";
+const API_URL = process.env.REACT_APP_API_URL || "";
 
 /**
  * 인증 관련 유틸리티 서비스
@@ -50,6 +57,41 @@ const authService = {
   getAuthHeaders: (): Record<string, string> => {
     const token = localStorage.getItem(ACCESS_TOKEN_KEY);
     return token ? { Authorization: `Bearer ${token}` } : {};
+  },
+
+  /**
+   * 토큰 갱신 요청을 보내는 함수
+   */
+  refreshTokens: async (): Promise<AuthTokens> => {
+    const refreshToken = authService.getRefreshToken();
+
+    if (!refreshToken) {
+      throw new Error("리프레시 토큰이 없습니다.");
+    }
+
+    try {
+      const requestData: TokenRefreshRequestDto = { refreshToken };
+
+      const response = await axios.post<ApiResponse<TokenRefreshResponse>>(
+        `${API_URL}/api/auth/refresh`,
+        requestData
+      );
+
+      if (!response.data.isSuccess) {
+        throw new Error("토큰 갱신에 실패했습니다.");
+      }
+
+      const newTokens: AuthTokens = {
+        accessToken: response.data.data.accessToken,
+        refreshToken: response.data.data.refreshToken,
+      };
+
+      authService.saveTokensToStorage(newTokens);
+      return newTokens;
+    } catch (error) {
+      authService.removeTokensFromStorage();
+      throw error;
+    }
   },
 };
 
