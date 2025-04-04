@@ -193,32 +193,6 @@ function ProblemsPage() {
     setCurrentPage(pageIndex);
   };
 
-  // 난이도에 따른 스타일 클래스 결정
-  const getDifficultyClass = (difficulty: ProblemDifficulty) => {
-    switch (difficulty) {
-      case ProblemDifficulty.HARD:
-        return "bg-[#F3797E]/10 text-[#F3797E] border-[#F3797E]/20";
-      case ProblemDifficulty.MEDIUM:
-        return "bg-[#7978E9]/10 text-[#7978E9] border-[#7978E9]/20";
-      case ProblemDifficulty.EASY:
-        return "bg-[#4B49AC]/10 text-[#4B49AC] border-[#4B49AC]/20";
-      default:
-        return "bg-gray-100 text-gray-700";
-    }
-  };
-
-  // 문제 유형에 따른 스타일 클래스 결정
-  const getTypeClass = (type: ProblemType) => {
-    switch (type) {
-      case ProblemType.SUBJECTIVE:
-        return "bg-emerald-100 text-emerald-700 border-emerald-200";
-      case ProblemType.MULTIPLE_CHOICE:
-        return "bg-violet-100 text-violet-700 border-violet-200";
-      default:
-        return "bg-gray-100 text-gray-700";
-    }
-  };
-
   // 로딩 중 표시
   if (loading && !problemData) {
     return (
