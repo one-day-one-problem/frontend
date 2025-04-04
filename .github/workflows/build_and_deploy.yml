@@ -49,6 +49,20 @@ jobs:
         env:
           CI: false
 
+      - name: Install JavaScript Obfuscator
+        run: npm install -g javascript-obfuscator
+
+      - name: Obfuscate JS files
+        run: |
+          javascript-obfuscator ./build/static/js --output ./build/static/js \
+            --compact true \
+            --self-defending true \
+            --disable-console-output true \
+            --target browser \
+            --string-array true \
+            --string-array-threshold 0.75 \
+            --source-map false
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
