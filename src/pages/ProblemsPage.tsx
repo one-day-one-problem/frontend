@@ -14,6 +14,7 @@ import {
   TYPE_LABELS,
 } from "../types/problem";
 import Select from "../components/ui/Select";
+import ProblemsCardView from "../components/problems/ProblemsCardView";
 
 // 보기 모드 타입 정의
 type ViewMode = "card" | "list";
@@ -438,91 +439,10 @@ function ProblemsPage() {
         {/* 문제 목록 컨테이너 */}
         <div className="mb-8 min-h-[500px]">
           {viewMode === "card" ? (
-            /* 카드 뷰: 그리드 레이아웃으로 문제 표시 */
-            <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-              {problemData?.problems.map((problem) => (
-                <Link to={`/problems/${problem.id}`} key={problem.id}>
-                  <motion.div
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="bg-white p-4 sm:p-5 rounded-xl shadow-sm hover:shadow-md transition-all h-[150px] flex flex-col"
-                  >
-                    {/* 제목 영역과 해결 수 */}
-                    <div className="flex justify-between items-start mb-3 gap-2">
-                      <h3 className="text-lg font-semibold text-[#2D2B55] line-clamp-2 min-h-[3.5rem]">
-                        {problem.title}
-                      </h3>
-
-                      {/* 문제 해결 인원 */}
-                      <div className="flex-shrink-0 bg-blue-50 px-2 py-1 rounded-lg border border-blue-100 flex items-center gap-1 whitespace-nowrap">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-3.5 w-3.5 text-blue-500"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                          />
-                        </svg>
-                        <span className="text-xs font-medium text-blue-700">
-                          {problem.solvedCount.toLocaleString()}명
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* 태그 영역 - 항상 하단에 고정되도록 mt-auto 추가 */}
-                    <div className="flex flex-wrap gap-1.5 mt-auto">
-                      {/* 1. 카테고리 태그 */}
-                      <span
-                        key="category"
-                        className="bg-gray-50 text-gray-600 px-2 py-0.5 rounded-full text-xs border border-gray-100"
-                      >
-                        {categoryLabels[problem.category]}
-                      </span>
-
-                      {/* 2. 난이도 태그 */}
-                      <span
-                        key="difficulty"
-                        className={`px-2 py-0.5 rounded-full text-xs font-medium border ${getDifficultyClass(
-                          problem.difficulty
-                        )}`}
-                      >
-                        {difficultyLabels[problem.difficulty]}
-                      </span>
-
-                      {/* 3. 문제 유형 태그 */}
-                      <span
-                        key="type"
-                        className={`px-2 py-0.5 rounded-full text-xs border ${getTypeClass(
-                          problem.type
-                        )}`}
-                      >
-                        {typeLabels[problem.type]}
-                      </span>
-
-                      {/* 4. 해결/미해결 태그 (인증된 사용자에게만 표시) */}
-                      {isAuthenticated && problem.isSolved !== undefined && (
-                        <span
-                          key="solved-status"
-                          className={`text-xs px-2 py-0.5 rounded-full font-medium border ${
-                            problem.isSolved
-                              ? "bg-green-100 text-green-800 border-green-200"
-                              : "bg-amber-100 text-amber-800 border-amber-200"
-                          }`}
-                        >
-                          {problem.isSolved ? "해결 완료" : "미해결"}
-                        </span>
-                      )}
-                    </div>
-                  </motion.div>
-                </Link>
-              ))}
-            </section>
+            <ProblemsCardView
+              problems={problemData?.problems || []}
+              isAuthenticated={isAuthenticated}
+            />
           ) : (
             /* 리스트 뷰: 테이블 형태로 문제 표시 */
             <section className="bg-white rounded-xl shadow-sm mb-8">
