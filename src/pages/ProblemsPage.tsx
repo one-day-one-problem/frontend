@@ -14,6 +14,7 @@ import {
 } from "../types/problem";
 import Select from "../components/ui/Select";
 import Pagination from "../components/ui/Pagination";
+import ErrorDisplay from "../components/ErrorDisplay";
 import ProblemsCardView from "../components/problems/ProblemsCardView";
 import ProblemsListView from "../components/problems/ProblemsListView";
 
@@ -208,19 +209,11 @@ function ProblemsPage() {
   // 에러 표시
   if (error) {
     return (
-      <div className="min-h-screen bg-[#F7F7FC] flex items-center justify-center">
-        <div className="bg-white p-8 rounded-lg shadow-lg text-center max-w-md">
-          <div className="text-red-500 text-4xl mb-4">⚠️</div>
-          <h2 className="text-xl font-bold text-red-500 mb-2">오류 발생</h2>
-          <p className="text-gray-700 mb-4">{error}</p>
-          <button
-            onClick={fetchProblems}
-            className="bg-[#4B49AC] text-white px-4 py-2 rounded-lg hover:bg-[#3D3C8E] transition-colors"
-          >
-            다시 시도
-          </button>
-        </div>
-      </div>
+      <ErrorDisplay
+        message={error}
+        buttonText={"다시 시도"}
+        onAction={fetchProblems}
+      />
     );
   }
 

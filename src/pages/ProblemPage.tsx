@@ -12,6 +12,7 @@ import {
 import problemApi from "../api/problemApi";
 import submissionApi from "../api/submissionApi";
 import { Submission, SubmitAnswerRequest } from "../types/submission";
+import ErrorDisplay from "../components/ErrorDisplay";
 
 // 결과 모달 타입
 type ResultModalType = "success" | "failure" | "subjective" | null;
@@ -282,21 +283,11 @@ function ProblemPage() {
   // 에러 화면
   if (error || !problem) {
     return (
-      <div className="min-h-screen bg-[#F7F7FC] flex items-center justify-center">
-        <div className="bg-white p-8 rounded-lg shadow-lg text-center max-w-md">
-          <div className="text-red-500 text-4xl mb-4">⚠️</div>
-          <h2 className="text-xl font-bold text-red-500 mb-2">오류 발생</h2>
-          <p className="text-gray-700 mb-4">
-            {error || "문제를 찾을 수 없습니다."}
-          </p>
-          <Link
-            to="/problems"
-            className="inline-block bg-[#4B49AC] text-white px-4 py-2 rounded-lg hover:bg-[#3D3C8E] transition-colors"
-          >
-            문제 목록으로 돌아가기
-          </Link>
-        </div>
-      </div>
+      <ErrorDisplay
+        message={error || "문제를 찾을 수 없습니다."}
+        buttonText="문제 목록으로 돌아가기"
+        onAction={() => navigate("/problems")}
+      />
     );
   }
 
