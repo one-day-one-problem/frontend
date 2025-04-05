@@ -4,9 +4,9 @@ import {
   CATEGORY_LABELS,
   Problem,
   ProblemCategory,
-  ProblemDifficulty,
   ProblemSummary,
 } from "../../types/problem";
+import { getDifficultyClass } from "../../utils/problemStyles";
 
 /**
  * SubjectiveProblemSubmissionResultModal 컴포넌트의 Props 인터페이스
@@ -55,23 +55,6 @@ function SubjectiveProblemSubmissionResultModal({
         </p>
       );
     }
-
-    /**
-     * 난이도에 따른 스타일 클래스를 반환하는 함수
-     * @param {ProblemDifficulty} difficulty - 문제 난이도
-     */
-    const getDifficultyClass = (difficulty: ProblemDifficulty) => {
-      switch (difficulty) {
-        case ProblemDifficulty.HARD:
-          return "bg-[#F3797E]/10 text-[#F3797E] border-[#F3797E]/20";
-        case ProblemDifficulty.MEDIUM:
-          return "bg-[#7978E9]/10 text-[#7978E9] border-[#7978E9]/20";
-        case ProblemDifficulty.EASY:
-          return "bg-[#4B49AC]/10 text-[#4B49AC] border-[#4B49AC]/20";
-        default:
-          return "bg-gray-100 text-gray-700";
-      }
-    };
 
     return (
       <div className="my-6 border-y border-gray-200 pt-5">
