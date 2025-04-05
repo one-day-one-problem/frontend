@@ -15,6 +15,7 @@ import { Submission, SubmitAnswerRequest } from "../types/submission";
 import ErrorDisplay from "../components/ErrorDisplay";
 import SubjectiveProblemSubmissionResultModal from "../components/modal/SubjectiveProblemSubmissionResultModal";
 import MultipleChoiceProblemSubmissionResultSuccessModal from "../components/modal/MultipleChoiceProblemSubmissionResultSuccessModal";
+import MultipleChoiceProblemSubmissionResultFailureModal from "../components/modal/MultipleChoiceProblemSubmissionResultFailureModal";
 
 // 결과 모달 타입
 type ResultModalType = "success" | "failure" | "subjective" | null;
@@ -316,46 +317,10 @@ function ProblemPage() {
 
       case "failure":
         modalContent = (
-          <div className="text-center">
-            <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-5">
-              <svg
-                className="w-10 h-10 text-red-600"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M6 18L18 6M6 6l12 12"
-                ></path>
-              </svg>
-            </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-3">
-              오답입니다
-            </h2>
-            <p className="text-gray-600 mb-5">
-              아쉽게도 정답이 아닙니다.
-              <br />
-              문제를 다시 검토하고 재도전해 보세요.
-            </p>
-            <div className="flex flex-col gap-3 mt-6">
-              <button
-                onClick={handleRetry}
-                className="w-full bg-[#4B49AC] text-white py-3 rounded-lg hover:bg-[#3D3C8E] transition-colors"
-              >
-                다시 시도하기
-              </button>
-              <Link
-                to={`/problems`}
-                className="w-full bg-gray-100 text-gray-700 py-3 rounded-lg hover:bg-gray-200 transition-colors"
-                onClick={closeModal}
-              >
-                문제 목록으로 돌아가기
-              </Link>
-            </div>
-          </div>
+          <MultipleChoiceProblemSubmissionResultFailureModal
+            onClose={closeModal}
+            onRetry={handleRetry}
+          />
         );
         break;
 
