@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { motion } from "framer-motion";
 import { useAuth } from "../contexts/AuthContext";
 import problemApi from "../api/problemApi";
 import {
@@ -14,6 +13,10 @@ import {
   TYPE_LABELS,
 } from "../types/problem";
 import Select from "../components/ui/Select";
+import Pagination from "../components/ui/Pagination";
+import ErrorDisplay from "../components/ErrorDisplay";
+import ProblemsCardView from "../components/problems/ProblemsCardView";
+import ProblemsListView from "../components/problems/ProblemsListView";
 
 // 보기 모드 타입 정의
 type ViewMode = "card" | "list";
@@ -191,32 +194,6 @@ function ProblemsPage() {
     setCurrentPage(pageIndex);
   };
 
-  // 난이도에 따른 스타일 클래스 결정
-  const getDifficultyClass = (difficulty: ProblemDifficulty) => {
-    switch (difficulty) {
-      case ProblemDifficulty.HARD:
-        return "bg-[#F3797E]/10 text-[#F3797E] border-[#F3797E]/20";
-      case ProblemDifficulty.MEDIUM:
-        return "bg-[#7978E9]/10 text-[#7978E9] border-[#7978E9]/20";
-      case ProblemDifficulty.EASY:
-        return "bg-[#4B49AC]/10 text-[#4B49AC] border-[#4B49AC]/20";
-      default:
-        return "bg-gray-100 text-gray-700";
-    }
-  };
-
-  // 문제 유형에 따른 스타일 클래스 결정
-  const getTypeClass = (type: ProblemType) => {
-    switch (type) {
-      case ProblemType.SUBJECTIVE:
-        return "bg-emerald-100 text-emerald-700 border-emerald-200";
-      case ProblemType.MULTIPLE_CHOICE:
-        return "bg-violet-100 text-violet-700 border-violet-200";
-      default:
-        return "bg-gray-100 text-gray-700";
-    }
-  };
-
   // 로딩 중 표시
   if (loading && !problemData) {
     return (
@@ -232,19 +209,11 @@ function ProblemsPage() {
   // 에러 표시
   if (error) {
     return (
-      <div className="min-h-screen bg-[#F7F7FC] flex items-center justify-center">
-        <div className="bg-white p-8 rounded-lg shadow-lg text-center max-w-md">
-          <div className="text-red-500 text-4xl mb-4">⚠️</div>
-          <h2 className="text-xl font-bold text-red-500 mb-2">오류 발생</h2>
-          <p className="text-gray-700 mb-4">{error}</p>
-          <button
-            onClick={fetchProblems}
-            className="bg-[#4B49AC] text-white px-4 py-2 rounded-lg hover:bg-[#3D3C8E] transition-colors"
-          >
-            다시 시도
-          </button>
-        </div>
-      </div>
+      <ErrorDisplay
+        message={error}
+        buttonText={"다시 시도"}
+        onAction={fetchProblems}
+      />
     );
   }
 
@@ -438,451 +407,28 @@ function ProblemsPage() {
         {/* 문제 목록 컨테이너 */}
         <div className="mb-8 min-h-[500px]">
           {viewMode === "card" ? (
-            /* 카드 뷰: 그리드 레이아웃으로 문제 표시 */
-            <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-              {problemData?.problems.map((problem) => (
-                <Link to={`/problems/${problem.id}`} key={problem.id}>
-                  <motion.div
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="bg-white p-4 sm:p-5 rounded-xl shadow-sm hover:shadow-md transition-all h-[150px] flex flex-col"
-                  >
-                    {/* 제목 영역과 해결 수 */}
-                    <div className="flex justify-between items-start mb-3 gap-2">
-                      <h3 className="text-lg font-semibold text-[#2D2B55] line-clamp-2 min-h-[3.5rem]">
-                        {problem.title}
-                      </h3>
-
-                      {/* 문제 해결 인원 */}
-                      <div className="flex-shrink-0 bg-blue-50 px-2 py-1 rounded-lg border border-blue-100 flex items-center gap-1 whitespace-nowrap">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-3.5 w-3.5 text-blue-500"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                          />
-                        </svg>
-                        <span className="text-xs font-medium text-blue-700">
-                          {problem.solvedCount.toLocaleString()}명
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* 태그 영역 - 항상 하단에 고정되도록 mt-auto 추가 */}
-                    <div className="flex flex-wrap gap-1.5 mt-auto">
-                      {/* 1. 카테고리 태그 */}
-                      <span
-                        key="category"
-                        className="bg-gray-50 text-gray-600 px-2 py-0.5 rounded-full text-xs border border-gray-100"
-                      >
-                        {categoryLabels[problem.category]}
-                      </span>
-
-                      {/* 2. 난이도 태그 */}
-                      <span
-                        key="difficulty"
-                        className={`px-2 py-0.5 rounded-full text-xs font-medium border ${getDifficultyClass(
-                          problem.difficulty
-                        )}`}
-                      >
-                        {difficultyLabels[problem.difficulty]}
-                      </span>
-
-                      {/* 3. 문제 유형 태그 */}
-                      <span
-                        key="type"
-                        className={`px-2 py-0.5 rounded-full text-xs border ${getTypeClass(
-                          problem.type
-                        )}`}
-                      >
-                        {typeLabels[problem.type]}
-                      </span>
-
-                      {/* 4. 해결/미해결 태그 (인증된 사용자에게만 표시) */}
-                      {isAuthenticated && problem.isSolved !== undefined && (
-                        <span
-                          key="solved-status"
-                          className={`text-xs px-2 py-0.5 rounded-full font-medium border ${
-                            problem.isSolved
-                              ? "bg-green-100 text-green-800 border-green-200"
-                              : "bg-amber-100 text-amber-800 border-amber-200"
-                          }`}
-                        >
-                          {problem.isSolved ? "해결 완료" : "미해결"}
-                        </span>
-                      )}
-                    </div>
-                  </motion.div>
-                </Link>
-              ))}
-            </section>
+            <ProblemsCardView
+              problems={problemData?.problems || []}
+              isAuthenticated={isAuthenticated}
+            />
           ) : (
-            /* 리스트 뷰: 테이블 형태로 문제 표시 */
-            <section className="bg-white rounded-xl shadow-sm mb-8">
-              {/* 데스크톱 테이블 (md 이상 화면에서만 표시) */}
-              <div className="hidden md:block">
-                <div className="overflow-x-auto">
-                  <table className="min-w-[800px] w-full table-fixed divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
-                      <tr>
-                        <th
-                          scope="col"
-                          className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[40%]"
-                        >
-                          문제
-                        </th>
-                        <th
-                          scope="col"
-                          className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-[15%]"
-                        >
-                          카테고리
-                        </th>
-                        <th
-                          scope="col"
-                          className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-[15%]"
-                        >
-                          난이도
-                        </th>
-                        <th
-                          scope="col"
-                          className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-[15%]"
-                        >
-                          유형
-                        </th>
-                        <th
-                          scope="col"
-                          className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-[10%]"
-                        >
-                          풀이수
-                        </th>
-                        {isAuthenticated && (
-                          <th
-                            scope="col"
-                            className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-[10%]"
-                          >
-                            상태
-                          </th>
-                        )}
-                      </tr>
-                    </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
-                      {problemData?.problems.length ? (
-                        problemData.problems.map((problem) => (
-                          <tr
-                            key={problem.id}
-                            className="hover:bg-gray-50 transition-colors cursor-pointer"
-                            onClick={() =>
-                              (window.location.href = `/problems/${problem.id}`)
-                            }
-                          >
-                            <td className="px-6 py-4">
-                              <div
-                                className="font-medium text-[#2D2B55] truncate"
-                                title={problem.title}
-                              >
-                                {problem.title}
-                              </div>
-                            </td>
-                            <td className="px-6 py-4 text-center">
-                              <div className="flex justify-center">
-                                <span className="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-700 whitespace-nowrap">
-                                  {CATEGORY_LABELS[problem.category]}
-                                </span>
-                              </div>
-                            </td>
-                            <td className="px-6 py-4 text-center">
-                              <div className="flex justify-center">
-                                <span
-                                  className={`px-2 py-1 text-xs rounded-full ${getDifficultyClass(
-                                    problem.difficulty
-                                  )} whitespace-nowrap`}
-                                >
-                                  {DIFFICULTY_LABELS[problem.difficulty]}
-                                </span>
-                              </div>
-                            </td>
-                            <td className="px-6 py-4 text-center">
-                              <div className="flex justify-center">
-                                <span
-                                  className={`px-2 py-1 text-xs rounded-full ${getTypeClass(
-                                    problem.type
-                                  )} whitespace-nowrap`}
-                                >
-                                  {TYPE_LABELS[problem.type]}
-                                </span>
-                              </div>
-                            </td>
-                            <td className="px-6 py-4 text-center">
-                              <div className="text-sm text-gray-900">
-                                {problem.solvedCount.toLocaleString()}
-                              </div>
-                            </td>
-                            {isAuthenticated && (
-                              <td className="px-6 py-4 text-center">
-                                <div className="flex justify-center">
-                                  <span
-                                    className={`px-2 py-1 text-xs rounded-full ${
-                                      problem.isSolved
-                                        ? "bg-green-100 text-green-800"
-                                        : "bg-amber-100 text-amber-800"
-                                    } whitespace-nowrap`}
-                                  >
-                                    {problem.isSolved ? "해결" : "미해결"}
-                                  </span>
-                                </div>
-                              </td>
-                            )}
-                          </tr>
-                        ))
-                      ) : (
-                        <tr>
-                          <td
-                            colSpan={isAuthenticated ? 6 : 5}
-                            className="px-6 py-24 text-center text-gray-500"
-                          >
-                            <div className="text-center">
-                              <div className="text-3xl mb-4">🧩</div>
-                              <h3 className="text-lg font-semibold text-gray-700 mb-2">
-                                문제가 없습니다
-                              </h3>
-                              <p className="text-gray-500">
-                                다른 필터 조건으로 다시 시도해보세요.
-                              </p>
-                            </div>
-                          </td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-
-              {/* 모바일 리스트 뷰 (md 미만 화면에서 표시) */}
-              <div className="md:hidden min-h-[500px]">
-                {problemData?.problems.length ? (
-                  problemData.problems.map((problem) => (
-                    <div
-                      key={problem.id}
-                      className="p-4 border-b border-gray-200 hover:bg-gray-50 cursor-pointer h-[120px] flex flex-col justify-between"
-                      onClick={() =>
-                        (window.location.href = `/problems/${problem.id}`)
-                      }
-                    >
-                      {/* 상단 영역: 제목 및 풀이 수 */}
-                      <div className="flex justify-between items-start">
-                        <h3
-                          className="font-medium text-[#2D2B55] text-lg line-clamp-2 max-w-[70%]"
-                          title={problem.title}
-                        >
-                          {problem.title}
-                        </h3>
-                        <div className="ml-2 flex-shrink-0 flex items-center text-xs text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-3 w-3 mr-0.5"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                            />
-                          </svg>
-                          {problem.solvedCount.toLocaleString()}명
-                        </div>
-                      </div>
-
-                      {/* 하단 영역: 태그들 - 항상 하단에 고정되어 표시 */}
-                      <div className="flex flex-wrap gap-1 mt-auto">
-                        {/* 카테고리 */}
-                        <span className="px-2 py-0.5 text-xs rounded-full bg-gray-100 text-gray-700 whitespace-nowrap">
-                          {CATEGORY_LABELS[problem.category]}
-                        </span>
-
-                        {/* 난이도 */}
-                        <span
-                          className={`px-2 py-0.5 text-xs rounded-full ${getDifficultyClass(
-                            problem.difficulty
-                          )} whitespace-nowrap`}
-                        >
-                          {DIFFICULTY_LABELS[problem.difficulty]}
-                        </span>
-
-                        {/* 유형 */}
-                        <span
-                          className={`px-2 py-0.5 text-xs rounded-full ${getTypeClass(
-                            problem.type
-                          )} whitespace-nowrap`}
-                        >
-                          {TYPE_LABELS[problem.type]}
-                        </span>
-
-                        {/* 해결 여부 (인증된 사용자에게만 표시) */}
-                        {isAuthenticated && (
-                          <span
-                            className={`px-2 py-0.5 text-xs rounded-full ${
-                              problem.isSolved
-                                ? "bg-green-100 text-green-800"
-                                : "bg-amber-100 text-amber-800"
-                            } whitespace-nowrap`}
-                          >
-                            {problem.isSolved ? "해결" : "미해결"}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <div className="flex items-center justify-center h-[500px]">
-                    <div className="text-center">
-                      <div className="text-3xl mb-4">🧩</div>
-                      <h3 className="text-lg font-semibold text-gray-700 mb-2">
-                        문제가 없습니다
-                      </h3>
-                      <p className="text-gray-500">
-                        다른 필터 조건으로 다시 시도해보세요.
-                      </p>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </section>
-          )}
-
-          {/* 문제가 없는 경우 표시되는 안내 메시지 */}
-          {problemData?.empty && (
-            <div className="flex flex-col items-center justify-center p-6 sm:p-10 bg-white rounded-xl shadow-sm">
-              <div className="text-3xl sm:text-4xl mb-4">🧩</div>
-              <h3 className="text-lg sm:text-xl font-semibold text-gray-700 mb-2">
-                문제가 없습니다
-              </h3>
-              <p className="text-gray-500">
-                다른 필터 조건으로 다시 시도해보세요.
-              </p>
-            </div>
+            <ProblemsListView
+              problems={problemData?.problems || []}
+              isAuthenticated={isAuthenticated}
+            />
           )}
         </div>
 
         {/* 페이지네이션: 페이지 번호 및 이동 버튼 */}
-        <div className="py-6 h-[80px] flex items-center justify-center">
+        <div className="py-6 h-[80px]">
           {problemData && !problemData.empty && (
-            <div className="flex justify-center flex-wrap gap-1 sm:gap-2">
-              {/* 처음 페이지 버튼 (모바일에서 숨김) */}
-              <motion.button
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-                onClick={() => handlePageClick(0)}
-                disabled={!problemData.hasPrevious}
-                className={`hidden sm:flex items-center justify-center w-10 h-10 rounded-lg ${
-                  !problemData.hasPrevious
-                    ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                    : "bg-white text-[#4B49AC] hover:bg-[#4B49AC]/10"
-                }`}
-              >
-                &laquo;
-              </motion.button>
-
-              {/* 이전 페이지 버튼 */}
-              <motion.button
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-                onClick={() => handlePageClick(currentPage - 1)}
-                disabled={!problemData.hasPrevious}
-                className={`flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-lg ${
-                  !problemData.hasPrevious
-                    ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                    : "bg-white text-[#4B49AC] hover:bg-[#4B49AC]/10"
-                }`}
-              >
-                &lt;
-              </motion.button>
-
-              {/* 현재/전체 페이지 정보 (모바일에서만 표시) */}
-              <div className="flex sm:hidden items-center px-3 py-1 bg-white rounded-lg">
-                <span className="text-sm">
-                  {currentPage + 1} / {problemData.totalPages}
-                </span>
-              </div>
-
-              {/* 페이지 번호 버튼 목록 (데스크톱에서만 표시) */}
-              <div className="hidden sm:flex">
-                {Array.from({ length: problemData.totalPages }, (_, i) => {
-                  // 현재 페이지 주변 2개 페이지와 첫/마지막 페이지만 표시
-                  const showPageButton =
-                    i === 0 ||
-                    i === problemData.totalPages - 1 ||
-                    (i >= currentPage - 2 && i <= currentPage + 2);
-
-                  if (!showPageButton) {
-                    return i === currentPage - 3 || i === currentPage + 3 ? (
-                      <span
-                        key={i}
-                        className="flex items-center justify-center w-10 h-10"
-                      >
-                        ...
-                      </span>
-                    ) : null;
-                  }
-
-                  return (
-                    <motion.button
-                      key={i}
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.9 }}
-                      className={`w-10 h-10 rounded-lg ${
-                        currentPage === i
-                          ? "bg-[#4B49AC] text-white"
-                          : "bg-white text-[#4B49AC] hover:bg-[#4B49AC]/10"
-                      }`}
-                      onClick={() => handlePageClick(i)}
-                    >
-                      {i + 1}{" "}
-                      {/* 화면에 표시되는 페이지 번호는 1부터 시작하도록 +1 */}
-                    </motion.button>
-                  );
-                }).filter(Boolean)}
-              </div>
-
-              {/* 다음 페이지 버튼 */}
-              <motion.button
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-                onClick={() => handlePageClick(currentPage + 1)}
-                disabled={!problemData.hasNext}
-                className={`flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-lg ${
-                  !problemData.hasNext
-                    ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                    : "bg-white text-[#4B49AC] hover:bg-[#4B49AC]/10"
-                }`}
-              >
-                &gt;
-              </motion.button>
-
-              {/* 마지막 페이지 버튼 (모바일에서 숨김) */}
-              <motion.button
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-                onClick={() => handlePageClick(problemData.totalPages - 1)}
-                disabled={!problemData.hasNext}
-                className={`hidden sm:flex items-center justify-center w-10 h-10 rounded-lg ${
-                  !problemData.hasNext
-                    ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                    : "bg-white text-[#4B49AC] hover:bg-[#4B49AC]/10"
-                }`}
-              >
-                &raquo;
-              </motion.button>
-            </div>
+            <Pagination
+              currentPage={currentPage}
+              totalPages={problemData.totalPages}
+              hasPrevious={problemData.hasPrevious}
+              hasNext={problemData.hasNext}
+              onPageChange={handlePageClick}
+            />
           )}
         </div>
       </div>
