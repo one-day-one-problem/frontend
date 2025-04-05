@@ -13,6 +13,7 @@ import problemApi from "../api/problemApi";
 import submissionApi from "../api/submissionApi";
 import { Submission, SubmitAnswerRequest } from "../types/submission";
 import ErrorDisplay from "../components/ErrorDisplay";
+import SubjectiveProblemSubmissionResultModal from "../components/modal/SubjectiveProblemSubmissionResultModal";
 
 // 결과 모달 타입
 type ResultModalType = "success" | "failure" | "subjective" | null;
@@ -468,50 +469,12 @@ function ProblemPage() {
 
       case "subjective":
         modalContent = (
-          <div className="text-center">
-            <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-5">
-              <svg
-                className="w-10 h-10 text-blue-600"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
-                ></path>
-              </svg>
-            </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-3">
-              답안이 제출되었습니다
-            </h2>
-            <p className="text-gray-600 mb-5">
-              제출하신 답안은 AI를 통해
-              <br />
-              자동으로 검토되며,
-              <br />곧 피드백이 제공됩니다.
-            </p>
-
-            <RelatedProblemsPreview />
-
-            <div className="mt-6">
-              <button
-                onClick={closeModal}
-                className="w-full bg-[#4B49AC] text-white py-3 rounded-lg hover:bg-[#3D3C8E] transition-colors mb-3"
-              >
-                계속 풀이하기
-              </button>
-              <Link
-                to={`/problems`}
-                className="w-full inline-block bg-gray-100 text-gray-700 py-3 rounded-lg hover:bg-gray-200 transition-colors"
-                onClick={closeModal}
-              >
-                문제 목록으로 돌아가기
-              </Link>
-            </div>
-          </div>
+          <SubjectiveProblemSubmissionResultModal
+            problem={problem}
+            relatedProblems={relatedProblems}
+            loadingRelated={loadingRelated}
+            onClose={closeModal}
+          />
         );
         break;
     }
