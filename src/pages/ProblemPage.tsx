@@ -14,6 +14,7 @@ import submissionApi from "../api/submissionApi";
 import { Submission, SubmitAnswerRequest } from "../types/submission";
 import ErrorDisplay from "../components/ErrorDisplay";
 import SubjectiveProblemSubmissionResultModal from "../components/modal/SubjectiveProblemSubmissionResultModal";
+import MultipleChoiceProblemSubmissionResultSuccessModal from "../components/modal/MultipleChoiceProblemSubmissionResultSuccessModal";
 
 // 결과 모달 타입
 type ResultModalType = "success" | "failure" | "subjective" | null;
@@ -376,49 +377,12 @@ function ProblemPage() {
     switch (showModal) {
       case "success":
         modalContent = (
-          <div className="text-center">
-            <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-5">
-              <svg
-                className="w-10 h-10 text-green-600"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M5 13l4 4L19 7"
-                ></path>
-              </svg>
-            </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-3">
-              정답입니다!
-            </h2>
-            <p className="text-gray-600 mb-5">
-              축하합니다!
-              <br />
-              문제를 성공적으로 해결했습니다.
-            </p>
-
-            <RelatedProblemsPreview />
-
-            <div className="mt-6">
-              <button
-                onClick={closeModal}
-                className="w-full bg-[#4B49AC] text-white py-3 rounded-lg hover:bg-[#3D3C8E] transition-colors mb-3"
-              >
-                계속 풀이하기
-              </button>
-              <Link
-                to={`/problems`}
-                className="w-full inline-block bg-gray-100 text-gray-700 py-3 rounded-lg hover:bg-gray-200 transition-colors"
-                onClick={closeModal}
-              >
-                문제 목록으로 돌아가기
-              </Link>
-            </div>
-          </div>
+          <MultipleChoiceProblemSubmissionResultSuccessModal
+            problem={problem}
+            relatedProblems={relatedProblems}
+            loadingRelated={loadingRelated}
+            onClose={closeModal}
+          />
         );
         break;
 
